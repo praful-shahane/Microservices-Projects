@@ -1,15 +1,24 @@
 package com.javaexpress.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.javaexpress.controller.UserController;
 import com.javaexpress.dto.UserDto;
 import com.javaexpress.mappers.UserMapper;
 import com.javaexpress.models.Credential;
 import com.javaexpress.models.User;
 import com.javaexpress.repository.UserRepository;
 
+@Service
 public class UserServiceImpl implements UserService {
+	
+	 Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -39,14 +48,41 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto findById(Integer userId) {
-		// TODO Auto-generated method stub
-		return null;
+		 
+		return userRepository.findById(userId).map(userMapper :: toDto)
+				.orElseThrow(()-> new RuntimeException("User not found in DB"));
+				
 	}
 
 	@Override
 	public UserDto update(Integer userId, UserDto userDto) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		log.info(" UserServiceImpl ::  update userId{} userDto{}",userId , userDto);
+		Optional<User> userDB = userRepository.findById(userId);
+		if(userDB.isPresent()) {
+			log.info(" UserServiceImpl ::  user  object is present in DB userDB{}" , userDB.get());
+			User userEntity = userDB.get();
+
+			userEntity.setFirstName(userDto.getFirstName());
+			userEntity.setLastName(userDto.getLastName());
+			userEntity.setPhone(userDto.getContact());
+			userEntity.setEmail(userDto.getEmailAddress());
+			if(userDto.getCredential() !=null) {
+				userEntity.getCredential().setUsername(userDto.getCredential().getUsername());
+				userEntity.getCredential().setPassword(userDto.getCredential().getPassword());
+				
+			}
+			return userMapper.toDto(userEntity);
+		}else {
+			throw new RuntimeException("No User Object is available to update...");
+		}
+	}
+
+	@Override
+	public boolean deleteById(Integer userId) {
+		
+		userRepository.deleteById(userId);
+		return true;
 	}
 
 }

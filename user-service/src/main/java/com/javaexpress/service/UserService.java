@@ -10,6 +10,9 @@ public interface UserService {
 	UserDto findById(Integer userId);
 	
 	UserDto  update(Integer userId, UserDto  userDto);
+	
+	boolean deleteById(Integer userId);
+	
 	 
 
 }
