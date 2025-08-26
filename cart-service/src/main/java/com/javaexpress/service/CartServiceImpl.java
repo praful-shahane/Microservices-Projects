@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 import com.javaexpress.controller.CartController;
 import com.javaexpress.dto.CartItemRequestDto;
 import com.javaexpress.dto.CartItemResponseDto;
+import com.javaexpress.dto.UserDto;
+import com.javaexpress.exception.ResourceNotFoundException;
+import com.javaexpress.feignclients.ProductFeignClient;
+import com.javaexpress.feignclients.UserFeignClient;
 import com.javaexpress.models.CartItem;
 import com.javaexpress.repository.CartItemRepository;
 
@@ -23,6 +27,12 @@ public class CartServiceImpl implements CartService {
 	
 	@Autowired
 	private CartItemRepository cartItemRepository;
+	
+	@Autowired
+	private ProductFeignClient productFeignClient;
+	
+	@Autowired
+	private UserFeignClient userFeignClient;
 
 	@Override
 	public CartItemResponseDto addToCart(CartItemRequestDto cartItemRequestDto) {
@@ -31,8 +41,18 @@ public class CartServiceImpl implements CartService {
 		//we can use RESTTemplate & hardcode the url.
 		//but we can do it by using eureka server or feignclient.
 		
-		//TODO:: user service api need to call to fetch user details.
+		//Using feign clients
+		boolean isProductExists = productFeignClient.isProductExists(cartItemRequestDto.getProductId());
+		if(!isProductExists) {
+			throw new ResourceNotFoundException("Product does not exist in DB");
+		}
 		
+		
+		//TODO:: user service api need to call to fetch user details.
+		UserDto userDto = userFeignClient.fetchUser(cartItemRequestDto.getUserId().intValue());
+		if(userDto==null) {
+			throw new ResourceNotFoundException("User does not exist in DB");
+		}
 		
 		/*
 		 * if above both api call success i will save my cartItem into DB.
