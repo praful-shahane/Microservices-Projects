@@ -3,6 +3,7 @@ package com.javaexpress.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.catalina.mbeans.MBeanUtils;
 import org.springframework.beans.BeanUtils;
@@ -177,6 +178,13 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<OrderResponseDto> getOrdersByUser(Long userId) {
 	
+		return null;
+	}
+
+
+	@Override
+	public OrderResponseDto getOrderById(Long orderId) {
+		Optional<Order> byId = orderRepository.findById(orderId);
 		return null;
 	}
 
