@@ -2,14 +2,13 @@ package com.javaexpress.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
-import jakarta.persistence.CascadeType;
+import org.hibernate.annotations.GeneratorType;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,24 +16,17 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-@Table(name = "orders")
-public class Order {
+@Table(name = "payments")
+public class Payment {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+	private Long orderId;
 	private Long userId;
-	
-	private BigDecimal totalPrice;
-	
-	private String status;  //PLACED,CANCELLED, SHIPPED, DELIVERED , RETURN
-	
-	private LocalDateTime placedAt =  LocalDateTime.now();
-	
-	//one order has multiple order_items;
-	@OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
-	private List<OrderItem> items;
-	
+	private BigDecimal amount;
+	private String status;  //SUCCESS,FAILED,PENDING
+	private LocalDateTime paymentTime = LocalDateTime.now();
+
 
 }

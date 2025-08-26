@@ -15,9 +15,9 @@ import com.javaexpress.dto.CartItemResponseDto;
 public interface CartFeignClient {
 	
 	@GetMapping("/{userId}")
-	public List<CartItemResponseDto> getCartByUserId(@PathVariable Long userId) ;
+	public List<CartItemResponseDto> getCartByUserId(@PathVariable("userId") Long userId) ;
 	
 	@DeleteMapping("/clear/{userId}")
-	public void clearUserCart(@PathVariable Long userId) ;
+	public void clearUserCart(@PathVariable("userId") Long userId) ;
 
 }

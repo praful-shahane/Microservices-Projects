@@ -12,9 +12,9 @@ import com.javaexpress.dto.ProductResponseDTO;
 public interface ProductFeignClient{
 	
 	@GetMapping("/exists/{productId}")
-	public boolean isProductExists(@PathVariable Long productId);
+	public boolean isProductExists(@PathVariable("productId") Long productId);
 	
 	@GetMapping("/{productId}")
-	public ProductResponseDTO getProduct(@PathVariable Long productId);
+	public ProductResponseDTO getProduct(@PathVariable("productId") Long productId);
 
 }

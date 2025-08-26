@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.javaexpress</groupId>
-	<artifactId>order-service</artifactId>
+	<artifactId>4-payment-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>3-order-service</name>
+	<name>4-payment-service</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
