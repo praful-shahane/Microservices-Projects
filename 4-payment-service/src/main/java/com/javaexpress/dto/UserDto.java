@@ -14,6 +14,7 @@ public class UserDto {
 	private String lastName;
 	private String emailAddress;
 	private String contact;
+	private String errorMessage;
 
 	
 	

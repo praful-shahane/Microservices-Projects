@@ -12,6 +12,7 @@ import com.javaexpress.models.Payment;
 import com.javaexpress.repository.PaymentRepository;
 import com.netflix.discovery.converters.Auto;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -21,9 +22,12 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Autowired
 	private PaymentRepository paymentRepository;
+
 	
 	@Autowired
-	private UserFeignClient userFeignClient;
+	private UserIntegrationService   userIntegrationService; //Inject  user service
+	
+	
 
 	@Override
 	public PaymentResponseDTO processPayment(PaymentRequestDTO paymentRequestDTO) {
@@ -31,10 +35,8 @@ public class PaymentServiceImpl implements PaymentService {
 		//TO DO  :: assignment for order commuinication. find orderdetails by orderid.
 		
 		//TO DO :: assignment for user communication.
-		UserDto userDto = userFeignClient.fetchUser(paymentRequestDTO.getUserId().intValue());
-		if(userDto ==null) {
-			throw new RuntimeException("USER NOT FOUND IN DB");
-		}
+		UserDto userDto = userIntegrationService.fetchUser(paymentRequestDTO); //will trigger circuitbreaker
+		
 		Payment payment = new Payment();
 		BeanUtils.copyProperties(paymentRequestDTO, payment);
 		payment.setStatus("SUCCESS");
@@ -42,6 +44,9 @@ public class PaymentServiceImpl implements PaymentService {
 		
 		return mapToDTO(payment);
 	}
+
+	
+	
 
 	private PaymentResponseDTO mapToDTO(Payment payment) {
 		
